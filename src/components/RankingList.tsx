@@ -9,7 +9,6 @@ import { RankingItem } from "./RankingItem";
 interface RankingListProps {
     type: RankingTab;
 }
-
 function formatDate(
     dateTime: string,
     type: RankingTab,
@@ -18,47 +17,32 @@ function formatDate(
         if (!/^\d{10}$/.test(dateTime)) {
             return "-";
         }
-
         const month = dateTime.slice(2, 4);
         const day = dateTime.slice(4, 6);
-
         return `${month}.${day}`;
     }
-
     if (!/^\d{12}$/.test(dateTime)) {
         return "-";
     }
-
     const month = dateTime.slice(4, 6);
     const day = dateTime.slice(6, 8);
-
     return `${month}.${day}`;
 }
-
 export function RankingList({ type }: RankingListProps) {
     const [items, setItems] = useState<RankingItemViewModel[]>(
         [],
     );
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-
     useEffect(() => {
         const controller = new AbortController();
-
         async function loadRanking() {
             setIsLoading(true);
             setErrorMessage("");
-
             try {
                 const data = await getRankingList(
                     type,
                     controller.signal,
-                );
-                console.table(
-                    data.map((item, index) => ({
-                        rank: index + 1,
-                        title: item.title,
-                    })),
                 );
                 setItems(data.slice(0, 10));
             } catch (error) {
@@ -68,7 +52,6 @@ export function RankingList({ type }: RankingListProps) {
                 ) {
                     return;
                 }
-
                 setItems([]);
                 setErrorMessage(
                     error instanceof Error
@@ -79,12 +62,9 @@ export function RankingList({ type }: RankingListProps) {
                 setIsLoading(false);
             }
         }
-
         void loadRanking();
-
         return () => controller.abort();
     }, [type]);
-
     if (isLoading) {
         return (
             <div className="ranking-state">
@@ -92,7 +72,6 @@ export function RankingList({ type }: RankingListProps) {
             </div>
         );
     }
-
     if (errorMessage) {
         return (
             <div className="ranking-state ranking-state--error">
@@ -100,7 +79,6 @@ export function RankingList({ type }: RankingListProps) {
             </div>
         );
     }
-
     if (items.length === 0) {
         return (
             <div className="ranking-state">
@@ -108,7 +86,6 @@ export function RankingList({ type }: RankingListProps) {
             </div>
         );
     }
-
     return (
         <div className="ranking-list">
             {items.map((item, index) => (
@@ -119,6 +96,9 @@ export function RankingList({ type }: RankingListProps) {
                     platformName={item.platformName}
                     title={item.title}
                     date={formatDate(item.dateTime, type)}
+                    visitCount={item.visitCount}
+                    salesCount={item.salesCount}
+                    salesAmount={item.salesAmount}
                 />
             ))}
         </div>
