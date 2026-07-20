@@ -2,11 +2,11 @@ import { useState } from "react";
 import { Header } from "./components/Header";
 import { RankingList } from "./components/RankingList";
 import { RankingTabs } from "./components/RankingTabs";
+import type { RankingTab } from "./types/ranking";
 
-export type RankingType = "live" | "hs";
 
 function App() {
-  const [rankingType, setRankingType] = useState<RankingType>("live");
+  const [rankingType, setRankingType] = useState<RankingTab>("hs");
 
   return (
     <>

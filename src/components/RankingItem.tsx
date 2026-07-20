@@ -1,5 +1,8 @@
+import type { RankingTab } from "../types/ranking";
+
 interface RankingItemProps {
     rank: number;
+    type: RankingTab;
     platformName: string;
     title: string;
     date: string;
@@ -7,6 +10,7 @@ interface RankingItemProps {
 
 export function RankingItem({
     rank,
+    type,
     platformName,
     title,
     date,
@@ -28,7 +32,7 @@ export function RankingItem({
 
                 <div className="ranking-item__metrics">
                     <span>{date}</span>
-                    <span>조회수 🔒</span>
+                    <span>{type === "hs" ? "시청률" : "조회수"} 🔒</span>
                     <span>판매 🔒</span>
                     <span>매출 🔒</span>
                 </div>

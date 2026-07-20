@@ -1,8 +1,8 @@
-import type { RankingType } from "../App";
+import type { RankingTab } from "../types/ranking";
 
 interface RankingTabsProps {
-    selectedType: RankingType;
-    onChange: (type: RankingType) => void;
+    selectedType: RankingTab;
+    onChange: (type: RankingTab) => void;
 }
 
 export function RankingTabs({
@@ -14,8 +14,8 @@ export function RankingTabs({
             <button
                 type="button"
                 className={`ranking-tabs__button ${selectedType === "live"
-                        ? "ranking-tabs__button--active"
-                        : ""
+                    ? "ranking-tabs__button--active"
+                    : ""
                     }`}
                 onClick={() => onChange("live")}
             >
@@ -25,8 +25,8 @@ export function RankingTabs({
             <button
                 type="button"
                 className={`ranking-tabs__button ${selectedType === "hs"
-                        ? "ranking-tabs__button--active"
-                        : ""
+                    ? "ranking-tabs__button--active"
+                    : ""
                     }`}
                 onClick={() => onChange("hs")}
             >

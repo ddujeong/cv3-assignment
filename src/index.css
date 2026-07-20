@@ -191,6 +191,17 @@ button {
   font-size: 15px;
 }
 
+.ranking-state {
+  padding: 60px 20px;
+  color: #777;
+  border-bottom: 1px solid #dedede;
+  text-align: center;
+}
+
+.ranking-state--error {
+  color: #d14343;
+}
+
 @media (max-width: 720px) {
   .header {
     height: 70px;

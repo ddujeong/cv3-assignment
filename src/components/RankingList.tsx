@@ -1,55 +1,104 @@
-import type { RankingType } from "../App";
+import { useEffect, useState } from "react";
+import { getRankingList } from "../api/rankingApi";
+import type {
+    RankingItemData,
+    RankingTab,
+} from "../types/ranking";
 import { RankingItem } from "./RankingItem";
 
 interface RankingListProps {
-    type: RankingType;
+    type: RankingTab;
 }
 
-const mockItems = [
-    {
-        id: 1,
-        platformName: "네이버쇼핑LIVE",
-        title: "[베스트어워즈] 7월 킨도 베스트어워즈 앵콜 라이브💕",
-        date: "07.20",
-    },
-    {
-        id: 2,
-        platformName: "네이버쇼핑LIVE",
-        title: "혜택 가득한 갤럭시탭 라이브🧡",
-        date: "07.20",
-    },
-    {
-        id: 3,
-        platformName: "네이버쇼핑LIVE",
-        title: "오늘 단 하루! 최대 26% 할인쿠폰+포인트 적립!",
-        date: "07.20",
-    },
-    {
-        id: 4,
-        platformName: "네이버쇼핑LIVE",
-        title: "갤럭시 S26 시리즈 자급제 할인 LIVE",
-        date: "07.20",
-    },
-    {
-        id: 5,
-        platformName: "네이버쇼핑LIVE",
-        title: "삼성 에어컨 냉장고 Live 사은품",
-        date: "07.20",
-    },
-];
+function formatDate(dateTime?: string) {
+    if (!dateTime || dateTime.length < 8) {
+        return "-";
+    }
+
+    const month = dateTime.slice(4, 6);
+    const day = dateTime.slice(6, 8);
+
+    return `${month}.${day}`;
+}
 
 export function RankingList({ type }: RankingListProps) {
+    const [items, setItems] = useState<RankingItemData[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+
+    useEffect(() => {
+        const controller = new AbortController();
+
+        async function loadRanking() {
+            setIsLoading(true);
+            setErrorMessage("");
+
+            try {
+                const data = await getRankingList(type, controller.signal);
+
+                console.log(data);
+
+                setItems(data.list.slice(0, 10));
+            } catch (error) {
+                if (
+                    error instanceof DOMException &&
+                    error.name === "AbortError"
+                ) {
+                    return;
+                }
+
+                setItems([]);
+                setErrorMessage(
+                    error instanceof Error
+                        ? error.message
+                        : "알 수 없는 오류가 발생했습니다.",
+                );
+            } finally {
+                setIsLoading(false);
+            }
+        }
+
+        void loadRanking();
+
+        return () => {
+            controller.abort();
+        };
+    }, [type]);
+
+    if (isLoading) {
+        return (
+            <div className="ranking-state">
+                방송 정보를 불러오는 중입니다.
+            </div>
+        );
+    }
+
+    if (errorMessage) {
+        return (
+            <div className="ranking-state ranking-state--error">
+                {errorMessage}
+            </div>
+        );
+    }
+
+    if (items.length === 0) {
+        return (
+            <div className="ranking-state">
+                표시할 방송이 없습니다.
+            </div>
+        );
+    }
+
     return (
         <div className="ranking-list">
-            {mockItems.map((item, index) => (
+            {items.map((item, index) => (
                 <RankingItem
-                    key={`${type}-${item.id}`}
+                    key={item.hsshow_id ?? `${item.hsshow_title}-${index}`}
                     rank={index + 1}
-                    platformName={
-                        type === "hs" ? "홈쇼핑 방송" : item.platformName
-                    }
-                    title={item.title}
-                    date={item.date}
+                    type={type}
+                    platformName={item.platform_name}
+                    title={item.hsshow_title}
+                    date={formatDate(item.hsshow_datetime_start)}
                 />
             ))}
         </div>
