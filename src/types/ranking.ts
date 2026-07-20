@@ -1,27 +1,46 @@
 export type RankingTab = "live" | "hs";
 
-export interface RankingCategory {
-    cat_name?: string;
-}
-
-export interface RankingItemData {
-    hsshow_id?: number | string;
-    hsshow_title: string;
+export interface HomeShoppingItem {
+    hsshow_id: string;
+    platform_id: string;
     platform_name: string;
+    hsshow_title: string;
     hsshow_datetime_start: string;
-    hsshow_datetime_end?: string;
-
-    cat?: RankingCategory;
-
     visit_cnt: number | null;
     sales_cnt: number | null;
     sales_amt: number | null;
     item_cnt: number | null;
-
-    hsshow_url_live?: string;
 }
 
-export interface RankingResponse {
-    list: RankingItemData[];
-    mask?: boolean;
+export interface LiveBroadcastItem {
+    objectID: string;
+    platform_id: string;
+    title: string;
+    datetime_start: string;
+    product_cnt: number | null;
+    visit_cnt: number | null;
+    sales_cnt: number | null;
+    sales_amt: number | null;
+    cid?: number;
+}
+
+export interface RankingItemViewModel {
+    id: string;
+    platformName: string;
+    title: string;
+    dateTime: string;
+    visitCount: number | null;
+    salesCount: number | null;
+    salesAmount: number | null;
+    productCount: number | null;
+}
+
+export interface HomeShoppingResponse {
+    list: HomeShoppingItem[];
+    mask: boolean;
+}
+
+export interface LiveBroadcastResponse {
+    list: LiveBroadcastItem[];
+    mask: boolean;
 }

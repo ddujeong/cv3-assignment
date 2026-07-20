@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getRankingList } from "../api/rankingApi";
 import type {
-    RankingItemData,
+    RankingItemViewModel,
     RankingTab,
 } from "../types/ranking";
 import { RankingItem } from "./RankingItem";
@@ -10,8 +10,22 @@ interface RankingListProps {
     type: RankingTab;
 }
 
-function formatDate(dateTime?: string) {
-    if (!dateTime || dateTime.length < 8) {
+function formatDate(
+    dateTime: string,
+    type: RankingTab,
+): string {
+    if (type === "live") {
+        if (!/^\d{10}$/.test(dateTime)) {
+            return "-";
+        }
+
+        const month = dateTime.slice(2, 4);
+        const day = dateTime.slice(4, 6);
+
+        return `${month}.${day}`;
+    }
+
+    if (!/^\d{12}$/.test(dateTime)) {
         return "-";
     }
 
@@ -22,7 +36,9 @@ function formatDate(dateTime?: string) {
 }
 
 export function RankingList({ type }: RankingListProps) {
-    const [items, setItems] = useState<RankingItemData[]>([]);
+    const [items, setItems] = useState<RankingItemViewModel[]>(
+        [],
+    );
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -34,11 +50,17 @@ export function RankingList({ type }: RankingListProps) {
             setErrorMessage("");
 
             try {
-                const data = await getRankingList(type, controller.signal);
-
-                console.log(data);
-
-                setItems(data.list.slice(0, 10));
+                const data = await getRankingList(
+                    type,
+                    controller.signal,
+                );
+                console.table(
+                    data.map((item, index) => ({
+                        rank: index + 1,
+                        title: item.title,
+                    })),
+                );
+                setItems(data.slice(0, 10));
             } catch (error) {
                 if (
                     error instanceof DOMException &&
@@ -60,9 +82,7 @@ export function RankingList({ type }: RankingListProps) {
 
         void loadRanking();
 
-        return () => {
-            controller.abort();
-        };
+        return () => controller.abort();
     }, [type]);
 
     if (isLoading) {
@@ -93,12 +113,12 @@ export function RankingList({ type }: RankingListProps) {
         <div className="ranking-list">
             {items.map((item, index) => (
                 <RankingItem
-                    key={item.hsshow_id ?? `${item.hsshow_title}-${index}`}
+                    key={item.id}
                     rank={index + 1}
                     type={type}
-                    platformName={item.platform_name}
-                    title={item.hsshow_title}
-                    date={formatDate(item.hsshow_datetime_start)}
+                    platformName={item.platformName}
+                    title={item.title}
+                    date={formatDate(item.dateTime, type)}
                 />
             ))}
         </div>
