@@ -12,20 +12,27 @@
 
 ## 실행 방법
 
-### 1. 패키지 설치
+### 1. 저장소 복제
+
+```bash
+git clone https://github.com/ddujeong/cv3-assignment.git
+cd cv3-assignment
+```
+
+### 2. 패키지 설치
 
 ```bash
 npm install
 ```
 
-### 2. 개발 서버 실행
+### 3. 개발 서버 실행
 
 ```bash
 npm run dev
 ```
 실행 후 브라우저에서 터미널에 출력되는 Local 주소(예: http://localhost:5173)로 접속합니다.
 
-### 3. 빌드 (선택)
+### 4. 빌드 (선택)
 
 ```bash
 npm run build
