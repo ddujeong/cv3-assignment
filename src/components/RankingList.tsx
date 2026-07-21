@@ -99,6 +99,7 @@ export function RankingList({ type }: RankingListProps) {
                     visitCount={item.visitCount}
                     salesCount={item.salesCount}
                     salesAmount={item.salesAmount}
+                    productCount={item.productCount}
                 />
             ))}
         </div>

@@ -9,6 +9,7 @@ interface RankingItemProps {
     visitCount: number | null;
     salesCount: number | null;
     salesAmount: number | null;
+    productCount: number | null;
 }
 export function RankingItem({
     rank,
@@ -19,6 +20,7 @@ export function RankingItem({
     visitCount,
     salesCount,
     salesAmount,
+    productCount,
 }: RankingItemProps) {
     function formatMetric(value: number | null): string {
         return value === null
@@ -55,6 +57,9 @@ export function RankingItem({
 
                     <span>
                         매출 {formatMetric(salesAmount)}
+                    </span>
+                    <span>
+                        상품 {formatMetric(productCount)}
                     </span>
                 </div>
             </div>
