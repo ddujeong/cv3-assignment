@@ -6,7 +6,7 @@ import type { RankingTab } from "./types/ranking";
 
 
 function App() {
-  const [rankingType, setRankingType] = useState<RankingTab>("hs");
+  const [rankingType, setRankingType] = useState<RankingTab>("live");
 
   return (
     <>
@@ -14,10 +14,10 @@ function App() {
 
       <main className="page">
         <section className="ranking">
-          <h1 className="ranking__title">
+          <h2 className="ranking__title">
             <span className="ranking__title-icon">◔</span>
             라방 · 홈쇼핑 랭킹 (채용 과제)
-          </h1>
+          </h2>
 
           <div className="ranking__title-line" />
 
